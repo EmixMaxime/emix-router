@@ -3,6 +3,27 @@
 # Emix Router
 # Utilisation
 ```javascript
+// prepareRoute.js
+const controllersPath = '/app/controllers'
+
+export const prepareRoute = (routes) => {
+
+  routes.forEach(route => {
+    const { controllerMethod } = route;
+    console.log({route, controllerMethod});
+    const [controller, method] = controllerMethod.split('.');
+    const Controller = require(`${controllersPath}/${controller}`).default;
+
+    route.controllerMethod = Controller[method];
+  });
+
+  return routes;
+};
+
+export default prepareRoute;
+```
+
+```javascript
 const emixRouter = require('emix-router');
 const { getRoutes, filterRouteByMiddleware, addExpressRoutes } = emixRouter;
 
