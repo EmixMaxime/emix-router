@@ -4,8 +4,8 @@ const filterRouteByMiddleware = require('./src/filterRoute').filterRouteByMiddle
 const addExpressRoutes = require('./src/addExpressRoutes');
 
 const getRoutes = function (routes) {
-  const resourcesRoute = getParsedResourceRoute(routes.resources);
-  const groupRoute = getParsedGroupRoute(routes.groups);
+  const resourcesRoute = getParsedResourceRoute(routes.resources) || [];
+  const groupRoute = getParsedGroupRoute(routes.groups) || [];
 
   return new Set([...resourcesRoute, ...groupRoute]);
 };
