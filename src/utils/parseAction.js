@@ -6,6 +6,10 @@ const checkMiddleware = require('./checkMiddleware');
  * @param {Object} actionObject
  */
 const ParseAction = function ({ _includes, checkMiddleware }) {
+
+  if (typeof _includes !== 'function') throw new Error('_includes must be a function');
+  if (typeof checkMiddleware !== 'function') throw new Error('checkMiddleware must be a function');
+
   const httpVerbAvailable = [
     'get', 'post', 'put', 'patch', 'delete'
   ];

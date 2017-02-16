@@ -1,7 +1,7 @@
 const chai = require('chai');
 const expect = require('chai').expect;
 
-const parseAction = require('../src/utils/parseAction').parseActionFactory;
+const parseAction = require('../src/utils/parseAction').parseAction;
 
 describe('parseAction', () => {
   const fakeMiddleware = () => {};
