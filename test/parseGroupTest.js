@@ -1,13 +1,14 @@
 const chai = require('chai');
 const expect = require('chai').expect;
 
-const parseResourceRoutes = require('../src/parseResourceRoute').parseResourceRoutes;
+const parseGroupRoute = require('../src/parseGroupRoute').parseGroupRoute;
 
 function isGuest () {};
 function isNotLocked () {};
 function isEmix () {};
 
 describe('parseRouteTest', () => {
+
   const resource = {
       path: '/login', // Attention pas de / à la fin, merci
       controller: 'AuthController',
@@ -36,7 +37,7 @@ describe('parseRouteTest', () => {
   expectedResult.add(route1).add(route2);
 
   it('It should return good Set', () => {
-    const result = parseResourceRoutes(resource);
+    const result = parseGroupRoute(resource);
     expect(result).to.eql(expectedResult);
   });
 

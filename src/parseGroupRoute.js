@@ -1,9 +1,9 @@
 const checkMiddleware = require('./utils/checkMiddleware');
 const mergeMiddleware = require('./utils/mergeMiddleware');
+const mergePath = require('./utils/mergePath');
 const parseAction = require('./utils/parseAction').parseAction;
 
-const ParseGroupRoute = function ({ mergeMiddleware, checkMiddleware, parseAction }) {
-
+const ParseGroupRoute = function ({ mergeMiddleware, checkMiddleware, parseAction, mergePath }) {
   return (route) => {
     const { actions, controller, path } = route;
     const routes = new Set();
@@ -27,26 +27,12 @@ const ParseGroupRoute = function ({ mergeMiddleware, checkMiddleware, parseActio
       routes.add(actionRoute);
     });
 
-
     return routes;
   }
 };
 
-const GetParsedGroupRoute = function ({ parseGroupRoute }) {
+const parseGroupRoute = ParseGroupRoute({ mergeMiddleware, checkMiddleware, parseAction, mergePath });
 
-  return (routes = []) => {
-    let applicationRoutes;
-
-    routes.forEach(route => {
-      const dRoutes = parseGroupRoute(route);
-      applicationRoutes = new Set([...dRoutes]); // Merge set : http://stackoverflow.com/a/32000937
-    });
-
-    return applicationRoutes;
-  }
+module.exports = {
+  parseGroupRoute, ParseGroupRoute
 };
-
-const parseGroupRoute = ParseGroupRoute({ mergeMiddleware, checkMiddleware, parseAction });
-const getParsedGroupRoute = GetParsedGroupRoute({ parseGroupRoute });
-
-module.exports = { getParsedGroupRoute, GetParsedGroupRoute, parseGroupRoute, ParseGroupRoute};

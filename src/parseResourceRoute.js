@@ -57,21 +57,6 @@ const ParseResourceRoutes = function ({ _without }, resource) {
 const ParseResourceRoutesFactory = (deps) => ParseResourceRoutes.bind(null, deps);
 const parseResourceRoutes = ParseResourceRoutesFactory({ _without });
 
-const GetParsedResourceRoute = function ({ parseResourceRoutes }, resourceRoutes = []) {
-  let applicationRoutes;
-
-  resourceRoutes.forEach(resourceRoute => {
-    const dRoutes = parseResourceRoutes(resourceRoute);
-    applicationRoutes = new Set([...dRoutes]); // Merge set : http://stackoverflow.com/a/32000937
-  });
-
-  return applicationRoutes;
-};
-
-const GetParsedResourceRouteFactory = (deps) => GetParsedResourceRoute.bind(null, deps);
-const getParsedResourceRoute = GetParsedResourceRouteFactory({ parseResourceRoutes });
-
 module.exports = {
-  getParsedResourceRoute, GetParsedResourceRouteFactory,
   ParseResourceRoutesFactory, parseResourceRoutes
 };
