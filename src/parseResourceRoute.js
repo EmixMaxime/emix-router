@@ -29,8 +29,9 @@ const ParseResourceRoutes = function ({ _without }, resource) {
 
 	const actionsAvailable = actionsWithPaths.map(ap => ap.action); // -> 'index', 'create', 'store' ....
 
-	if (only && without) throw Error('Only et without ne peuvent pas être défini à deux');
-	const actions = only || _without(actionsAvailable, ...without);
+	if (only && without) throw new Error('Only et without ne peuvent pas être défini à deux');
+  // Si je n'ai ni only ni without je met toutes les actions possibles
+	const actions = (!only && !without) ? actionsAvailable : only || _without(actionsAvailable, ...without);
 
 	// Ex: only: ['create', 'store', {action: 'show', middleware: [isAdministrator]} ],
 	if (only) { // On peut définir des middleware à mettre sur des actions spécifiques
@@ -70,4 +71,7 @@ const GetParsedResourceRoute = function ({ parseResourceRoutes }, resourceRoutes
 const GetParsedResourceRouteFactory = (deps) => GetParsedResourceRoute.bind(null, deps);
 const getParsedResourceRoute = GetParsedResourceRouteFactory({ parseResourceRoutes });
 
-module.exports = { getParsedResourceRoute, parseResourceRoutes };
+module.exports = {
+  getParsedResourceRoute, GetParsedResourceRouteFactory,
+  ParseResourceRoutesFactory, parseResourceRoutes
+};
