@@ -4,10 +4,11 @@
  * @param {Set} routes
  */
 const addExpressRoutes = function (router, routes) {
-	routes.forEach(route => {
+  for (let route of routes) {
     const { httpVerb, path, middleware, controllerMethod } = route;
 		router[httpVerb](path, middleware, controllerMethod);
-	});
+  }
+  
 	return router;
 };
 
