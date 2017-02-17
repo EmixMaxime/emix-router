@@ -4,17 +4,17 @@ const filterRouteByMiddleware = require('./src/filterRoute').filterRouteByMiddle
 const addExpressRoutes = require('./src/addExpressRoutes');
 
 function getRoutes (routes) {
-  const routes = [];
+  const route = [];
 
   for (let resource of routes.resources) {
-    routes.push(parseResource(resource));
+    route.push(parseResource(resource));
   }
 
   for (let group in routes.groups) {
-    routes.push(parseGroup(group));
+    route.push(parseGroup(group));
   }
-  
-  return routes;
+
+  return route;
 }
 
 module.exports = {
