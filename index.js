@@ -1,14 +1,21 @@
-const getParsedResourceRoute = require('./src/parseResourceRoute').getParsedResourceRoute;
-const getParsedGroupRoute = require('./src/parseGroupRoute').getParsedGroupRoute;
+const parseResource = require('./src/parseResource').parseResource;
+const parseGroup = require('./src/parseGroup').parseGroup;
 const filterRouteByMiddleware = require('./src/filterRoute').filterRouteByMiddleware;
 const addExpressRoutes = require('./src/addExpressRoutes');
 
-const getRoutes = function (routes) {
-  const resourcesRoute = getParsedResourceRoute(routes.resources) || [];
-  const groupRoute = getParsedGroupRoute(routes.groups) || [];
+function getRoutes (routes) {
+  const routes = [];
 
-  return new Set([...resourcesRoute, ...groupRoute]);
-};
+  for (let resource of routes.resources) {
+    routes.push(parseResource(resource));
+  }
+
+  for (let group in routes.groups) {
+    routes.push(parseGroup(group));
+  }
+  
+  return routes;
+}
 
 module.exports = {
   filterRouteByMiddleware,

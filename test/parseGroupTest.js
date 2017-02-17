@@ -1,7 +1,7 @@
 const chai = require('chai');
 const expect = require('chai').expect;
 
-const parseGroupRoute = require('../src/parseGroupRoute').parseGroupRoute;
+const parseGroup = require('../src/parseGroup').parseGroup;
 
 function isGuest () {};
 function isNotLocked () {};
@@ -37,7 +37,7 @@ describe('parseRouteTest', () => {
   expectedResult.add(route1).add(route2);
 
   it('It should return good Set', () => {
-    const result = parseGroupRoute(resource);
+    const result = parseGroup(resource);
     expect(result).to.eql(expectedResult);
   });
 
