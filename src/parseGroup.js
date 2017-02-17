@@ -3,7 +3,7 @@ const mergeMiddleware = require('./utils/mergeMiddleware');
 const mergePath = require('./utils/mergePath');
 const parseAction = require('./utils/parseAction').parseAction;
 
-const ParseGroupRoute = function ({ mergeMiddleware, checkMiddleware, parseAction, mergePath }) {
+const ParseGroup = function ({ mergeMiddleware, checkMiddleware, parseAction, mergePath }) {
   return (route) => {
     const { actions, controller, path } = route;
     const routes = new Set();
@@ -31,8 +31,8 @@ const ParseGroupRoute = function ({ mergeMiddleware, checkMiddleware, parseActio
   }
 };
 
-const parseGroupRoute = ParseGroupRoute({ mergeMiddleware, checkMiddleware, parseAction, mergePath });
+const parseGroup = ParseGroup({ mergeMiddleware, checkMiddleware, parseAction, mergePath });
 
 module.exports = {
-  parseGroupRoute, ParseGroupRoute
+  ParseGroup, parseGroup
 };
