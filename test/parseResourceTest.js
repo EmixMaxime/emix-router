@@ -99,4 +99,25 @@ describe('parseRouteTest', () => {
     expect(result).to.be.deep.equal(expectedRoutes);
   });
 
+  it('It should be okay without middleware', () => {
+    const resource = {
+      path: '/documents',
+      controller: 'DocumentsController',
+      only: ['index']
+    };
+
+    const deleteRoute = {
+      httpVerb: 'get',
+      path: '/documents',
+      controllerMethod: 'DocumentsController.index',
+      middleware: [],
+      name: 'documents.index'
+    };
+
+    const expectedRoutes = [deleteRoute];
+    const result = parseResource(resource);
+
+    expect(result).to.be.deep.equal(expectedRoutes);
+  });
+
 });

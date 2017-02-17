@@ -10,7 +10,9 @@ const ParseResource = function ({ _without }, resource) {
 	const { only, without, controller, path } = resource;
   
   // C'est toujours un tableau 
-  const resourceMiddleware = Array.isArray(resource.middleware) ? resource.middleware : [resource.middleware];
+
+  const resourceMiddleware = resource.middleware === undefined ? [] 
+                            : (Array.isArray(resource.middleware) ? resource.middleware : [resource.middleware]);
 
   if (!controller) throw new Error('Controller must be defined');
   if (!path) throw new Error('Path must be defined');
