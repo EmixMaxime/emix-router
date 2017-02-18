@@ -14,6 +14,7 @@ const checkMiddleware = function (middleware) {
     }
     return middleware;
   }
+  return [];
 };
 
 module.exports = checkMiddleware;
