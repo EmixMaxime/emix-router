@@ -1,10 +1,11 @@
-const mergeMiddleware = function (controllerMiddleware, middleware) {
-  if (!Array.isArray(controllerMiddleware) || !Array.isArray(middleware)) {
-    throw Error(`${controllerMiddleware} and ${middleware} must be Array`);
-  }
+const checkMiddleware = require('./checkMiddleware');
+
+function mergeMiddleware ({ checkMiddleware }, controllerMiddleware, middleware) {
+  controllerMiddleware = checkMiddleware(controllerMiddleware);
+  middleware = checkMiddleware(middleware);
   return controllerMiddleware.concat(middleware);
 };
 
-module.exports = mergeMiddleware;
+module.exports = mergeMiddleware.bind(null, { checkMiddleware });
 
 // Idea: mergeMiddleware(middleware1)(middleware2)(middleware3).get()
