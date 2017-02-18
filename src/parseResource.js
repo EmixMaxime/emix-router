@@ -1,13 +1,14 @@
 const _without = require('lodash/without');
+const mergeMiddleware = require('./utils/mergeMiddleware');
 
 /**
  *
  * @param {Object} resource
  * @return {Set}
  */
-const ParseResource = function ({ _without }, resource) {
+const ParseResource = function ({ _without, mergeMiddleware }, resource) {
 	const routes = new Set();
-	const { only, without, controller, path } = resource;
+	const { only, without, with: withOption, controller, path } = resource;
   
   // C'est toujours un tableau 
 
@@ -49,24 +50,31 @@ const ParseResource = function ({ _without }, resource) {
 			routes.add(actionWithInformations);
   }
 
+  function buildWithOption (withOptions) {
+    if (withOptions === undefined) return;
+
+    if (!Array.isArray(withOptions)) throw new Error('With option must be an Array');
+    for (let withOption of withOptions) {
+      const middleware = mergeMiddleware(resourceMiddleware, withOption.middleware);
+      buildAndAddRoute(withOption.action, middleware);
+    }
+  }
+
 	// Ex: only: ['create', 'store', {action: 'show', middleware: [isAdministrator]} ]
 	if (only) { // On peut définir des middleware à mettre sur des actions spécifiques
     for (let action of actions) {
-			let middleware = Array.from(resourceMiddleware);
-
 			if (typeof action !== 'string') { // C'est un objet : on doit ajouter le middleware
-        // Si ce n'est pas un tableau, je ne m'embête pas, j'en créé un
-        if(!Array.isArray(action.middleware)) action.middleware = [action.middleware];
-				middleware.push(...action.middleware);
+        const middleware = mergeMiddleware(resourceMiddleware, action.middleware);
 				buildAndAddRoute(action.action, middleware);
 			} else {
-        // console.log({middleware})
-        buildAndAddRoute(action, middleware);
+        buildAndAddRoute(action, resourceMiddleware);
       }
-      
-			// middleware.push(Controller[action]) // Push at the end of middleware the Controller function
     }
-	} else {
+	}
+  else if (withOption) {
+    buildWithOption(withOption);
+  }
+  else {
     // J'ai toutes les actions par défaut, ou alors sans quelques actions (without)
     for (let action of actions) {
       buildAndAddRoute(action, resourceMiddleware);
@@ -77,7 +85,7 @@ const ParseResource = function ({ _without }, resource) {
 };
 
 const ParseResourceFactory = (deps) => ParseResource.bind(null, deps);
-const parseResource = ParseResourceFactory({ _without });
+const parseResource = ParseResourceFactory({ _without, mergeMiddleware });
 
 module.exports = {
   ParseResourceFactory, parseResource

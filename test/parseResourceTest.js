@@ -106,7 +106,7 @@ describe('parseRouteTest', () => {
       only: ['index']
     };
 
-    const deleteRoute = {
+    const indexRoute = {
       httpVerb: 'get',
       path: '/documents',
       controllerMethod: 'DocumentsController.index',
@@ -114,7 +114,39 @@ describe('parseRouteTest', () => {
       name: 'documents.index'
     };
 
-    const expectedRoutes = [deleteRoute];
+    const expectedRoutes = [indexRoute];
+    const result = parseResource(resource);
+
+    expect(result).to.be.deep.equal(expectedRoutes);
+  });
+
+  it('It should be okay with "with" object', () => {
+    const resource = {
+      path: '/documents',
+      controller: 'DocumentsController',
+      without: ['index', 'create', 'store', 'edit', 'update', 'show'], // Only delete and update
+      with: [
+        { action: 'delete', middleware: isEmix }, { action: 'update', middleware: isNotLocked }
+      ]
+    };
+
+    const deleteRoute = {
+      httpVerb: 'delete',
+      path: '/documents/:documents',
+      controllerMethod: 'DocumentsController.delete',
+      middleware: [isEmix],
+      name: 'documents.delete'
+    };
+
+    const updateRoute = {
+      httpVerb: 'put',
+      path: '/documents/:documents',
+      controllerMethod: 'DocumentsController.update',
+      middleware: [isNotLocked],
+      name: 'documents.update'
+    };
+
+    const expectedRoutes = [deleteRoute, updateRoute];
     const result = parseResource(resource);
 
     expect(result).to.be.deep.equal(expectedRoutes);
