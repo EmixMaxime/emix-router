@@ -10,6 +10,6 @@ describe('mergePath', () => {
 
     const merged = mergeMiddleware(firstMiddleware, secondMiddleware);
 
-    expect(firstMiddleware.concat(secondMiddleware)).to.eql(merged);
-  })
+    expect(firstMiddleware.concat(secondMiddleware)).to.deep.equal(merged);
+  });
 });

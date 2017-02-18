@@ -1,5 +1,5 @@
 /**
- *
+ * Convert string to Array
  * @param {String|Array} middleware
  * @returns {Array}
  */
@@ -14,7 +14,6 @@ const checkMiddleware = function (middleware) {
     }
     return middleware;
   }
-  return [];
 };
 
 module.exports = checkMiddleware;
