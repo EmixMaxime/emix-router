@@ -35,9 +35,12 @@ const ParseResource = function ({ _without, mergeMiddleware }, resource) {
 
 	if (only && without) throw new Error('Only et without ne peuvent pas être défini à deux');
   // Si je n'ai ni only ni without je met toutes les actions possibles
-	const actions = (!only && !without) ? actionsAvailable : only || _without(actionsAvailable, ...without); // On prend les actions à "créer"
+	const actions =
+    (!only && !without)
+    ? actionsAvailable
+    : only || _without(actionsAvailable, ...without); // On prend les actions à "créer"
 
-  function buildAndAddRoute (action, middleware) {
+  const buildAndAddRoute = function (action, middleware) {
       // On va récupérer l'objet qui défini l'action, si on en trouve pas on retourne false = error
 			const actionWithInformations = actionsWithPaths.filter(ap => ap.action === action ? ap : false)[0];
       if (actionWithInformations === false) throw new Error('Erreur qui ne devrait jamais arriver');
@@ -54,6 +57,7 @@ const ParseResource = function ({ _without, mergeMiddleware }, resource) {
     if (withOptions === undefined) return;
 
     if (!Array.isArray(withOptions)) throw new Error('With option must be an Array');
+
     for (let withOption of withOptions) {
       const middleware = mergeMiddleware(resourceMiddleware, withOption.middleware);
       buildAndAddRoute(withOption.action, middleware);
@@ -72,6 +76,14 @@ const ParseResource = function ({ _without, mergeMiddleware }, resource) {
     }
 	}
   else if (withOption) {
+    // On s'occupe des actions par défaut
+    const withAction = withOption.map(action => action.action);
+    const defaultActions = _without(actions, ...withAction);
+
+    for (let defaultAction of defaultActions) {
+      buildAndAddRoute(defaultAction, resourceMiddleware);
+    }
+    // Puis celles précisées par le with option
     buildWithOption(withOption);
   }
   else {

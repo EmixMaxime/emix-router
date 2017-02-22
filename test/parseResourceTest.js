@@ -82,7 +82,15 @@ describe('parseRouteTest', () => {
       path: '/documents',
       controller: 'DocumentsController',
       middleware: isGuest,
-      without: ['index', 'create', 'store', 'edit', 'update', 'show', 'update'] // Only delete
+      without: ['create', 'store', 'edit', 'update', 'show', 'update'] // Only delete and index
+    };
+
+    const indexRoute = {
+      httpVerb: 'get',
+      path: '/documents',
+      controllerMethod: 'DocumentsController.index',
+      middleware: [isGuest],
+      name: 'documents.index'
     };
 
     const deleteRoute = {
@@ -93,7 +101,7 @@ describe('parseRouteTest', () => {
       name: 'documents.delete'
     };
 
-    const expectedRoutes = [deleteRoute];
+    const expectedRoutes = [indexRoute, deleteRoute];
     const result = parseResource(resource);
 
     expect(result).to.be.deep.equal(expectedRoutes);
@@ -120,14 +128,22 @@ describe('parseRouteTest', () => {
     expect(result).to.be.deep.equal(expectedRoutes);
   });
 
-  it('It should be okay with "with" object', () => {
+  it('It should be okay with "with" and without object', () => {
     const resource = {
       path: '/documents',
       controller: 'DocumentsController',
-      without: ['index', 'create', 'store', 'edit', 'update', 'show'], // Only delete and update
+      without: ['index', 'create', 'store', 'edit'], // Only delete, update and the original show
       with: [
         { action: 'delete', middleware: isEmix }, { action: 'update', middleware: isNotLocked }
       ]
+    };
+
+    const showRoute = {
+      httpVerb: 'get',
+      path: '/documents/:documents',
+      controllerMethod: 'DocumentsController.show',
+      middleware: [],
+      name: 'documents.show'
     };
 
     const deleteRoute = {
@@ -146,7 +162,7 @@ describe('parseRouteTest', () => {
       name: 'documents.update'
     };
 
-    const expectedRoutes = [deleteRoute, updateRoute];
+    const expectedRoutes = [showRoute, deleteRoute, updateRoute];
     const result = parseResource(resource);
 
     expect(result).to.be.deep.equal(expectedRoutes);
